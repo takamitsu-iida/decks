@@ -16,4 +16,4 @@ https://takamitsu-iida.github.io/decks/
 
 2019年1月17日（木）Ansibleもくもく会に参加したときの作業メモ。
 
-<https://takamitsu-iida.github.io/decks/20180117-ansible-moku2/>
+<https://takamitsu-iida.github.io/decks/20190117-ansible-moku2/>
