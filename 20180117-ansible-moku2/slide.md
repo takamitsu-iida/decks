@@ -33,7 +33,7 @@ githubに新規でレポジトリを作成。
 
 /home/student8/networking-workshop/以下をgithubにpush
 
-```
+```bash
 git init
 git add README.md
 git commit -m "first commit"
@@ -55,7 +55,9 @@ git pull
 
 markdownもvs codeの中で見れるので便利。
 
-編集したらcommit, push
+編集したらcommit, pushしてAWS側と同期する。
+
+手間はかかるけど、vimを使うより精神的に楽。
 
 ---
 
@@ -72,6 +74,8 @@ markdownもvs codeの中で見れるので便利。
       ios_config:
         src: secure_router.cfg
 ```
+
+同じ設定を全てのターゲットノードに展開するなら、これでいいんだけど、ルータごとに違う設定を入れたい、となるともっと工夫が必要。
 
 ---
 
@@ -96,7 +100,8 @@ service tcp-keepalives-out
 
 ## ex2-1-backup
 
-素直にshow running-configを採取した方がいいのではなかろうか？
+ios_configモジュールでも採取できるけど、
+素直にshow running-configをファイルの保存した方がいいのではなかろうか？
 
 ```yml
   tasks:
@@ -130,7 +135,8 @@ service tcp-keepalives-out
 一つのフォルダbackupにファイルが保存される。
 
 なんどやっても一つだけしかできない。
-古いのは自動で削除してるみたい。
+
+ios_configモジュールは、古いコンフィグを自動で削除。
 
 ```bash
 [student8@ansible 2-1-backup]$ tree backup
@@ -191,23 +197,8 @@ Directory of bootflash:/
    12  -rw-        392479704  Jul 27 2018 16:30:53 +00:00  csr1000v-mono-universalk9.16.09.01.SPA.pkg
    13  -rw-         40201438  Jul 27 2018 16:30:53 +00:00  csr1000v-rpboot.16.09.01.SPA.pkg
    14  -rw-             1941  Jul 27 2018 16:30:53 +00:00  packages.conf
-292609  drwx             4096  Jan 16 2019 07:29:59 +00:00  .installer
-162561  drwx             4096  Jan 16 2019 07:29:57 +00:00  core
-   15  -rw-              128  Jan 16 2019 07:29:51 +00:00  iid_check.log
-48769  drwx             4096  Jan 16 2019 07:29:52 +00:00  .prst_sync
-276353  drwx             4096  Jan 16 2019 07:29:57 +00:00  .rollback_timer
-357633  drwx             8192  Jan 17 2019 11:20:23 +00:00  tracelogs
-463297  drwx             4096  Jan 16 2019 07:31:00 +00:00  .dbpersist
-32513  drwx             4096  Jan 16 2019 07:30:16 +00:00  virtual-instance
-   16  -rw-               30  Jan 16 2019 07:31:03 +00:00  throughput_monitor_params
-   17  -rw-             5919  Jan 16 2019 07:30:59 +00:00  cvac.log
-   18  -rw-                1  Jan 16 2019 07:30:57 +00:00  .cvac_version
-   19  -rw-               16  Jan 16 2019 07:30:57 +00:00  ovf-env.xml.md5
-   20  -rw-              209  Jan 16 2019 07:30:58 +00:00  csrlxc-cfg.log
-40641  drwx             4096  Jan 16 2019 07:30:58 +00:00  onep
-65025  drwx             4096  Jan 17 2019 10:38:49 +00:00  syslog
-73153  drwx             4096  Jan 16 2019 07:31:04 +00:00  iox
-   21  -rw-             6275  Jan 17 2019 11:20:13 +00:00  rtr1.config
+
+   21  -rw-             6275  Jan 17 2019 11:20:13 +00:00  rtr1.config　★★★これ
 
 7897378816 bytes total (7062708224 bytes free)
 rtr1#
@@ -231,6 +222,8 @@ templateモジュールはtemplatesディレクトリの下を自動で探しに
 ## ex3-0-templates
 
 出力されるレポートはこんな感じ。
+
+markdownで出力。
 
 ```bash
 [student8@ansible 3-0-templates]$ cat network_os_report.md
@@ -350,13 +343,6 @@ rtr4                       : ok=1    changed=0    unreachable=0    failed=1
 ```bash
 [student8@ansible 3-1-parser]$ ansible-playbook interface_report.yml
 
-PLAY [GENERATE INTERFACE REPORT] ***************************************************************************************************************************************************************************
-
-TASK [CAPTURE SHOW INTERFACES] *****************************************************************************************************************************************************************************
-ok: [rtr2]
-ok: [rtr4]
-ok: [rtr1]
-ok: [rtr3]
 
 TASK [PARSE THE RAW OUTPUT] ********************************************************************************************************************************************************************************
 fatal: [rtr4]: FAILED! => {"msg": "invalid value for export_as, got None"}
@@ -365,11 +351,4 @@ fatal: [rtr1]: FAILED! => {"msg": "invalid value for export_as, got None"}
 fatal: [rtr2]: FAILED! => {"msg": "invalid value for export_as, got None"}
 	to retry, use: --limit @/home/student8/networking-workshop/exercises/3-1-parser/interface_report.retry
 
-PLAY RECAP *************************************************************************************************************************************************************************************************
-rtr1                       : ok=1    changed=0    unreachable=0    failed=1
-rtr2                       : ok=1    changed=0    unreachable=0    failed=1
-rtr3                       : ok=1    changed=0    unreachable=0    failed=1
-rtr4                       : ok=1    changed=0    unreachable=0    failed=1
-
-[student8@ansible 3-1-parser]$
 ```
