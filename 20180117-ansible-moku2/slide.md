@@ -208,3 +208,159 @@ rtr1#
 
 ## ex3-0-templates
 
+templateモジュールはtemplatesディレクトリの下を自動で探しに行くのでファイル名だけを指定すればよい。
+
+```yml
+    - name: RENDER FACTS AS A REPORT
+      template:
+        src: os_report.j2
+        dest: reports/{{ inventory_hostname }}.md
+```
+
+---
+
+## ex3-0-templates
+
+出力されるレポートはこんな感じ。
+
+```bash
+[student8@ansible 3-0-templates]$ cat network_os_report.md
+RTR1
+---
+9G55Z8J8HRC : 16.09.01
+RTR2
+---
+9RXLXYW5JBK : 16.09.01
+RTR3
+---
+9PM3U2U9REA : 16.09.01
+RTR4
+---
+92PQ5DJXGKN : 16.09.01[student8@ansible 3-0-templates]$
+```
+
+---
+
+## ex3-1-parser
+
+ロールを取ってくる。
+
+```bash
+[student8@ansible 3-1-parser]$ ansible-galaxy install ansible-network.network-engine
+- downloading role 'network-engine', owned by ansible-network
+- downloading role from https://github.com/ansible-network/network-engine/archive/v2.7.2.tar.gz
+- extracting ansible-network.network-engine to /home/student8/.ansible/roles/ansible-network.network-engine
+- ansible-network.network-engine (v2.7.2) was installed successfully
+[student8@ansible 3-1-parser]$
+```
+
+---
+
+## ex3-1-parser
+
+ロールをプレイブックから呼び出す。
+
+この書き方、古いので私はやらない。
+
+```yml
+  roles:
+    - ansible-network.network-engine
+```
+
+---
+
+## ex3-1-parser
+
+タスク全容。
+
+```yml
+  tasks:
+    - name: CAPTURE SHOW INTERFACES
+      ios_command:
+        commands:
+          - show interfaces
+      register: output
+
+    - name: PARSE THE RAW OUTPUT
+      command_parser:
+        file: "parsers/show_interfaces.yaml"
+        content: "{{ output.stdout[0] }}"
+
+    - name: DISPLAY THE PARSED DATA
+      debug:
+        var: interface_facts
+```
+
+---
+
+## ex3-1-parser
+
+parsers/show_interfaces.ymlがどこにあるのかわからん。
+
+```bash
+[student8@ansible 3-1-parser]$ ansible-playbook interface_report.yml
+
+PLAY [GENERATE INTERFACE REPORT] ***************************************************************************************************************************************************************************
+
+TASK [CAPTURE SHOW INTERFACES] *****************************************************************************************************************************************************************************
+ok: [rtr4]
+ok: [rtr3]
+ok: [rtr1]
+ok: [rtr2]
+
+TASK [PARSE THE RAW OUTPUT] ********************************************************************************************************************************************************************************
+fatal: [rtr3]: FAILED! => {"msg": "src [parsers/show_interfaces.yaml] is either missing or invalid"}
+fatal: [rtr1]: FAILED! => {"msg": "src [parsers/show_interfaces.yaml] is either missing or invalid"}
+fatal: [rtr2]: FAILED! => {"msg": "src [parsers/show_interfaces.yaml] is either missing or invalid"}
+fatal: [rtr4]: FAILED! => {"msg": "src [parsers/show_interfaces.yaml] is either missing or invalid"}
+	to retry, use: --limit @/home/student8/networking-workshop/exercises/3-1-parser/interface_report.retry
+
+PLAY RECAP *************************************************************************************************************************************************************************************************
+rtr1                       : ok=1    changed=0    unreachable=0    failed=1
+rtr2                       : ok=1    changed=0    unreachable=0    failed=1
+rtr3                       : ok=1    changed=0    unreachable=0    failed=1
+rtr4                       : ok=1    changed=0    unreachable=0    failed=1
+```
+
+---
+
+## ex3-1-parser
+
+ここかな？
+
+```bash
+/home/student8/.ansible/roles/ansible-network.network-engine/tests/command_parser/command_parser/parser_templates/ios/show_interfaces.yaml
+```
+
+---
+
+## ex3-1-parser
+
+やっぱダメだ。
+
+```bash
+[student8@ansible 3-1-parser]$ ansible-playbook interface_report.yml
+
+PLAY [GENERATE INTERFACE REPORT] ***************************************************************************************************************************************************************************
+
+TASK [CAPTURE SHOW INTERFACES] *****************************************************************************************************************************************************************************
+ok: [rtr2]
+ok: [rtr4]
+ok: [rtr1]
+ok: [rtr3]
+
+TASK [PARSE THE RAW OUTPUT] ********************************************************************************************************************************************************************************
+fatal: [rtr4]: FAILED! => {"msg": "invalid value for export_as, got None"}
+fatal: [rtr3]: FAILED! => {"msg": "invalid value for export_as, got None"}
+fatal: [rtr1]: FAILED! => {"msg": "invalid value for export_as, got None"}
+fatal: [rtr2]: FAILED! => {"msg": "invalid value for export_as, got None"}
+	to retry, use: --limit @/home/student8/networking-workshop/exercises/3-1-parser/interface_report.retry
+
+PLAY RECAP *************************************************************************************************************************************************************************************************
+rtr1                       : ok=1    changed=0    unreachable=0    failed=1
+rtr2                       : ok=1    changed=0    unreachable=0    failed=1
+rtr3                       : ok=1    changed=0    unreachable=0    failed=1
+rtr4                       : ok=1    changed=0    unreachable=0    failed=1
+
+[student8@ansible 3-1-parser]$
+```
