@@ -45,17 +45,17 @@ git push -u origin master
 
 ## ローカル側
 
-pullで取ってくる。
+githubにあがったのをgit pullでローカルに取ってくる。
 
 ```
 git pull
 ```
 
+githubを経由して、AWSの仮想マシンと、ローカルのPCでファイルをやり取りする。
+
 あとはVisual Studio Codeで編集。
 
-markdownもvs codeの中で見れるので便利。
-
-編集したらcommit, pushしてAWS側と同期する。
+READMEのmarkdownもvs codeの中で見れるので便利。
 
 手間はかかるけど、vimを使うより精神的に楽。
 
