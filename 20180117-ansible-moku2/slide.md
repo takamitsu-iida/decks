@@ -21,6 +21,10 @@
 <https://network-automation.github.io/linklight/exercises/networking_v2/>
 
 
+<br><br>
+
+Free WiFiの速度が遅くて、なんかすみません・・・
+
 ---
 
 ## 最初のセットアップ
