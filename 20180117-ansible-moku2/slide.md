@@ -22,6 +22,8 @@
 
 githubに新規でレポジトリを作成。
 
+/home/student8/networking-workshop/以下をgithubにpush
+
 ```
 git init
 git add README.md
@@ -32,7 +34,9 @@ git push -u origin master
 
 ---
 
-## ローカルのPCと同期
+## ローカル側
+
+pullで取ってくる。
 
 ```
 git pull
@@ -40,11 +44,17 @@ git pull
 
 あとはVisual Studio Codeで編集。
 
+markdownもvs codeの中で見れるので便利。
+
+編集したらcommit, push
+
 ---
 
 ## ex2-0-config
 
-設定を変更
+ルータの設定を変更するプレイブック。
+
+設定内容はファイルから。
 
 ```yml
   tasks:
@@ -155,4 +165,46 @@ scpコマンドでルータに直接ファイルを送り込む！
         commands:
           - config replace flash:{{inventory_hostname}}.config force
 ```
+
+---
+
+## ex2-2-restore
+
+bootflashのファイルを確認。
+
+```bash
+[student8@ansible 2-2-restore]$ ssh rtr1
+
+rtr1#dir flash:
+Directory of bootflash:/
+
+   11  drwx            16384  Jul 27 2018 16:29:16 +00:00  lost+found
+   12  -rw-        392479704  Jul 27 2018 16:30:53 +00:00  csr1000v-mono-universalk9.16.09.01.SPA.pkg
+   13  -rw-         40201438  Jul 27 2018 16:30:53 +00:00  csr1000v-rpboot.16.09.01.SPA.pkg
+   14  -rw-             1941  Jul 27 2018 16:30:53 +00:00  packages.conf
+292609  drwx             4096  Jan 16 2019 07:29:59 +00:00  .installer
+162561  drwx             4096  Jan 16 2019 07:29:57 +00:00  core
+   15  -rw-              128  Jan 16 2019 07:29:51 +00:00  iid_check.log
+48769  drwx             4096  Jan 16 2019 07:29:52 +00:00  .prst_sync
+276353  drwx             4096  Jan 16 2019 07:29:57 +00:00  .rollback_timer
+357633  drwx             8192  Jan 17 2019 11:20:23 +00:00  tracelogs
+463297  drwx             4096  Jan 16 2019 07:31:00 +00:00  .dbpersist
+32513  drwx             4096  Jan 16 2019 07:30:16 +00:00  virtual-instance
+   16  -rw-               30  Jan 16 2019 07:31:03 +00:00  throughput_monitor_params
+   17  -rw-             5919  Jan 16 2019 07:30:59 +00:00  cvac.log
+   18  -rw-                1  Jan 16 2019 07:30:57 +00:00  .cvac_version
+   19  -rw-               16  Jan 16 2019 07:30:57 +00:00  ovf-env.xml.md5
+   20  -rw-              209  Jan 16 2019 07:30:58 +00:00  csrlxc-cfg.log
+40641  drwx             4096  Jan 16 2019 07:30:58 +00:00  onep
+65025  drwx             4096  Jan 17 2019 10:38:49 +00:00  syslog
+73153  drwx             4096  Jan 16 2019 07:31:04 +00:00  iox
+   21  -rw-             6275  Jan 17 2019 11:20:13 +00:00  rtr1.config
+
+7897378816 bytes total (7062708224 bytes free)
+rtr1#
+```
+
+---
+
+## ex3-0-templates
 
