@@ -1,0 +1,7 @@
+/* @theme base */
+
+@import "gaia";
+
+section {
+  justify-content: start;
+}
