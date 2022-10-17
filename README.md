@@ -17,3 +17,9 @@ https://takamitsu-iida.github.io/decks/
 2019年1月17日（木）Ansibleもくもく会に参加したときの作業メモ。
 
 <https://takamitsu-iida.github.io/decks/20190117-ansible-moku2/>
+
+## pyats-practice
+
+pyatsの実行例を紹介。
+
+<https://takamitsu-iida.github.io/decks/pyats-practice/>
