@@ -10,7 +10,7 @@ pyATSに関して、日本語で入手できる情報は少なめです。
 
 実際に試してみたほうが早いのですが、少しでもハードルが下がるように動作例を提示します。
 
-<br><br><br>
+<br><br>
 
 ##### Takamitsu IIDA (@takamitsu-iida)
 
@@ -73,13 +73,22 @@ pip install yang.connector
 
 - eve-ngやCMLを使って環境を組むと検証がはかどります
 
-- ここではeve-ngを使います
+<img src="https://takamitsu-iida.github.io/pyats-practice/img/fig1.PNG" height=80%/>
 
-![構成図](https://takamitsu-iida.github.io/pyats-practice/img/fig1.PNG "構成図")
+---
+
+### 検証環境
+
+- eve-ngやCMLを使って環境を組むと検証がはかどります
+
+![bg left:80%](https://takamitsu-iida.github.io/pyats-practice/img/fig1.PNG)
 
 ---
 
 ### 例．コマンドの投げ込み
+
+
+
 
 
 ---
