@@ -507,6 +507,68 @@ r1#
 
 ---
 
+### 例．OSPFの状態の変化を確認したい
+
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex61.diff.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex61.log" target="_blank">log</a>]
+</p>
+
+コンフィグではなくて、状態データとしての変化を知りたいこともありますね。
+
+OSPFの場合、こんな感じで差分を検出できます。
+
+```bash
+ info:
+  vrf:
+   default:
+    address_family:
+     ipv4:
+      instance:
+       1:
+        areas:
+         0.0.0.0:
+          interfaces:
+           GigabitEthernet1:
+-           cost: 100
++           cost: 10
+```
+
+---
+
+### 例．ルーティングテーブルを変化を確認したい
+
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex62.diff.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex62.log" target="_blank">log</a>]
+</p>
+
+- 作業前のルーティングテーブルをlearn()
+- 作業後のルーティングテーブルをlearn()
+- diffを出力
+
+こんな感じの出力が得られます。+が増えた部分、-が消えた部分です。
+
+```bash
+ info:
+  vrf:
+   default:
+    address_family:
+     ipv4:
+      routes:
++      192.168.100.0/24:
++       active: True
++       next_hop:
++        outgoing_interface:
++         Null0:
++          outgoing_interface: Null0
++       route: 192.168.100.0/24
++       source_protocol: static
++       source_protocol_codes: S
+```
+
+---
+
 ### 例．疎通確認結果を判定
 
 結果をわかりやすく判定するならテストフレームワークを使うと便利です。
@@ -530,3 +592,29 @@ pingした結果がOKなのかNGなのか、わかりやすく表示します。
 </p>
 
 を参照してください。
+
+
+---
+
+### 例．ルーティングテーブルの状態を判定
+
+事前に保存しておいたルーティングテーブルの情報と、今現在のルーティングテーブルを比較して、差分がなければOKとして判定します。
+
+<p>
+<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job04_duplex" target="_blank">こちら</a>
+</p>
+
+を参照してください。
+
+
+---
+
+### さいごに
+
+<br>
+
+楽をするための苦労はいとわない。
+
+<br>
+
+ネットワークの自動化って、そういうことだと思います。
