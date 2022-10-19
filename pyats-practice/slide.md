@@ -601,7 +601,7 @@ pingした結果がOKなのかNGなのか、わかりやすく表示します。
 事前に保存しておいたルーティングテーブルの情報と、今現在のルーティングテーブルを比較して、差分がなければOKとして判定します。
 
 <p>
-<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job04_duplex" target="_blank">こちら</a>
+<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job04_route" target="_blank">こちら</a>
 </p>
 
 を参照してください。
