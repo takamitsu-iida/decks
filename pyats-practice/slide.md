@@ -32,7 +32,7 @@ Takamitsu IIDA (@takamitsu-iida)
 
 pyATS = python Automated Test System
 
-2017年頃にオープンソースになったCisco社製のツールです。
+2017年頃に公開されたCisco社製のツールです。
 
 > Cisco currently run over 2 million test runs per month using the pyATS framework.
 
