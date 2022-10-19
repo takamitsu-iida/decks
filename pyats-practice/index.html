@@ -10,143 +10,276 @@ GitHubリポジトリ
   Save
 -->
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>slide</title>
+  <title>slide</title>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/reveal.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/theme/white.css" id="theme">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/reveal.css">
 
-    <!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/zenburn.min.css">
+  <!-- Themes -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/theme/solarized.css" id="theme">
+  <!--
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/theme/white.css" id="theme">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/theme/serif.css" id="theme">
+  -->
 
-    <!-- Printing and PDF exports -->
-    <script>
-      var link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      // link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
-      link.href = window.location.search.match(/print-pdf/gi) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/print/paper.css';
-      document.getElementsByTagName('head')[0].appendChild(link);
-    </script>
+  <!-- Code syntax highlighting -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/zenburn.min.css">
 
-    <!-- スタイル指定 -->
-    <style type="text/css">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    // link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
 
-      /* タイトルが大文字に変換されるのを抑止 */
-      .reveal h1,
-      .reveal h2,
-      .reveal h3,
-      .reveal h4,
-      .reveal h5,
-      .reveal h6 {
-        text-transform: none;
-      }
+  <!-- スタイル指定 -->
+  <style type="text/css">
+    /* タイトルが大文字に変換されるのを抑止 */
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4,
+    .reveal h5,
+    .reveal h6 {
+      text-transform: none;
+    }
 
-      .reveal p {
-        text-align: left;  /* 左寄せにする */
-        font-size: 1.0em !important;  /* 小さめフォント **/
-      }
+    .reveal p {
+      text-align: left;  /* 左寄せにする */
+      font-size: 0.8em !important;  /* 小さめフォント **/
+    }
 
-      .reveal ul {
-        display: block;
-        list-style-type: square;  /* ■ マーカー */
-      }
+    .reveal ul {
+      display: block;
+      list-style-type: square; /* ■ マーカー */
+    }
 
-      .reveal ol {
-        display: block;
-      }
+    .reveal ol {
+      display: block;
+    }
 
-      .reveal section img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .reveal section img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-    </style>
+    /*******/
 
-  </head>
+    .reveal h1 {
+      font-size: 1.4em !important;
+      text-align: center;
+    }
 
-  <body>
-    <div class="reveal">
-      <div class="slides">
+    .reveal h2 {
+      font-size: 1.3em !important;
+      text-align: left;
+    }
 
-        <section data-markdown="slide.md" data-separator="^\n---\n$" data-separator-vertical="^\n>>>\n$"
-          data-separator-notes="^Note:" data-charset="utf-8">
-        </section>
+    .reveal h3 {
+      font-size: 1.2em !important;
+      text-align: left;
+    }
 
-      </div>
+    .reveal h4 {
+      font-size: 1.0em !important;
+      text-align: left;
+    }
+
+    .reveal h5 {
+      font-size: 1.0em !important;
+      text-align: left;
+    }
+
+    .reveal table {
+      font-size: 25pt;
+    }
+
+    /*強調*/
+    em {
+      color: #FF9900;
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    /*下線　取り消し線*/
+    .underline {
+      border-bottom: solid 2px black;
+    }
+
+    /* テキスト右寄せ */
+    .textright {
+      text-align: right;
+    }
+
+    /* テキスト左寄せ */
+    .textleft {
+      text-align: left;
+    }
+
+    /*画像センタリング*/
+    img.center {
+      display: block;
+      margin: 0 auto 100 auto;
+    }
+
+    /*画像回りこみ解除*/
+    .newpara {
+      clear: left
+    }
+
+    /*ブロック・画像回り込み*/
+    div.floatleft {
+      float: left;
+    }
+
+    div.floatright {
+      float: right;
+    }
+
+    img.floatleft {
+      float: left;
+    }
+
+    img.floatright {
+      float: right;
+    }
+
+    /*画像キャプション*/
+    .imgcap {
+      font-size: xx-small;
+      margin: 0;
+      padding: 0;
+      line-height: 1em;
+    }
+
+    /*コード*/
+    .reveal code {
+      margin: 4px 4px;
+      padding: 0 5px;
+      white-space: nowrap;
+      border: 1px solid #eaeaea;
+      background-color: #6E6E6E;
+      border-radius: 3px;
+    }
+
+    .reveal pre {
+      background-color: #6E6E6E;
+      border: 1px solid #cccccc;
+      font-size: 14pt;
+
+      overflow: auto;
+      padding: 0;
+      border-radius: 3px;
+    }
+
+    .reveal pre code {
+      white-space: pre;
+      background-color: transparent;
+      border: none;
+      max-height: 250px;
+    }
+
+    /*引用*/
+    .reveal blockquote {
+      text-align: left;
+      font-size: 18pt;
+      width: 25em;
+    }
+
+    /*スライド時の非表示*/
+    .SlideNoDisplay {
+      display: none;
+    }
+
+    /*******
+  </style>
+
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section data-markdown="slide.md" data-separator="^\n---\n$" data-separator-vertical="^\n>>>\n$" data-separator-notes="^Note:" data-charset="utf-8">
+      </section>
+
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/lib/js/head.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/js/reveal.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/lib/js/head.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/js/reveal.js"></script>
 
-    <script>
-      // More info about config & dependencies:
-      // - https://github.com/hakimel/reveal.js#configuration
-      // - https://github.com/hakimel/reveal.js#dependencies
-      Reveal.initialize({
-        dependencies: [
-          { src: '//cdnjs.cloudflare.com/ajax/libs/classlist/1.2.201711092/classList.min.js', condition: function () { return !document.body.classList; } },
-          { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/markdown/marked.js' },
-          { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/markdown/markdown.js' },
-          { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/notes/notes.js', async: true },
-          { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
-        ],
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: '//cdnjs.cloudflare.com/ajax/libs/classlist/1.2.201711092/classList.min.js', condition: function () { return !document.body.classList; } },
+        { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/markdown/marked.js' },
+        { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/markdown/markdown.js' },
+        { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/notes/notes.js', async: true },
+        { src: '//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+      ],
 
-        // Display presentation control arrows
-        controls: true,
+      // Display presentation control arrows
+      controls: true,
 
-        // Push each slide change to the browser history
-        history: false,
+      // Push each slide change to the browser history
+      history: false,
 
-        // Display the page number of the current slide
-        slideNumber: true,
+      // Display the page number of the current slide
+      slideNumber: true,
 
-        // Enable keyboard shortcuts for navigation
-        keyboard: true,
+      // Enable keyboard shortcuts for navigation
+      keyboard: true,
 
-        // Vertical centering of slides
-        center: false,
+      // Vertical centering of slides
+      center: false,
 
-        // Enables touch navigation on devices with touch input
-        touch: true,
+      // Enables touch navigation on devices with touch input
+      touch: true,
 
-        // Enable slide navigation via mouse wheel
-        mouseWheel: false,
+      // Enable slide navigation via mouse wheel
+      mouseWheel: false,
 
-        // Hides the address bar on mobile devices
-        hideAddressBar: false,
+      // Hides the address bar on mobile devices
+      hideAddressBar: false,
 
-        // Transition style
-        transition: 'convex', // none/fade/slide/convex/concave/zoom
+      // Transition style
+      transition: 'convex', // none/fade/slide/convex/concave/zoom
 
-        // Transition speed
-        transitionSpeed: 'default', // default/fast/slow
+      // Transition speed
+      transitionSpeed: 'default', // default/fast/slow
 
-        // Transition style for full page slide backgrounds
-        backgroundTransition: 'convex', // none/fade/slide/convex/concave/zoom
+      // Transition style for full page slide backgrounds
+      backgroundTransition: 'convex', // none/fade/slide/convex/concave/zoom
 
-        // Parallax background image
-        parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+      // Parallax background image
+      parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
 
-        // Parallax background size
-        parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+      // Parallax background size
+      parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
 
-        // Number of pixels to move the parallax background per slide
-        // - Calculated automatically unless specified
-        // - Set to 0 to disable movement along an axis
-        parallaxBackgroundHorizontal: null,
-        parallaxBackgroundVertical: null,
+      // Number of pixels to move the parallax background per slide
+      // - Calculated automatically unless specified
+      // - Set to 0 to disable movement along an axis
+      parallaxBackgroundHorizontal: null,
+      parallaxBackgroundVertical: null,
 
-        // The display mode that will be used to show slides
-        display: 'block'
+      // The display mode that will be used to show slides
+      display: 'block'
 
-      });
-    </script>
+    });
+  </script>
 
-  </body>
+</body>
 
 </html>

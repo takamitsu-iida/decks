@@ -6,13 +6,15 @@
 
 <br>
 
-pyATSに関して、日本語で入手できる情報は少なめです。
+pyATSはネットワークの検証に大変便利なツールですが、残念ながら日本語で入手できる情報は少なめです。
 
-実際に試してみたほうが早いのですが、少しでもハードルが下がるように動作例を提示します。
+少しでも導入のハードルが下がるように動作例を提示します。
 
 <br><br>
 
-##### Takamitsu IIDA (@takamitsu-iida)
+<div class="textright">
+Takamitsu IIDA (@takamitsu-iida)
+</div>
 
 ---
 
@@ -20,9 +22,9 @@ pyATSに関して、日本語で入手できる情報は少なめです。
 
 自動化といえばansibleの方がメジャーな地位を確立していますが、ネットワーク機器を使った検証作業はpyATSの方が便利です。
 
-ですが、日本語で得られる情報が少なめなこと、ネットワークの専門家であることが前提になっていることから、少々導入のハードルが高めです。
+ですが、日本語で得られる情報が少なめなこと、ネットワークとPython両方の専門家であることが前提になっていることから、少々導入のハードルが高めです。
 
-ここでは実際に動かす例を提示して、そのハードルを少しでも下げようと思います。
+最初はスクリプトの例をコピペする感じで試してもらえれば幸いです。
 
 ---
 
@@ -30,25 +32,32 @@ pyATSに関して、日本語で入手できる情報は少なめです。
 
 pyATS = python Automated Test System
 
-2017年頃にオープンソースになったCiscoの社内ツールです。
+2017年頃にオープンソースになったCisco社製のツールです。
 
-このページにあるIntroduction to pyATSが秀逸なのでぜひトライしてください。最速で理解できます。
+> Cisco currently run over 2 million test runs per month using the pyATS framework.
 
-https://developer.cisco.com/pyats/
+<!--
+引用元 https://www.rogerperkin.co.uk/network-automation/pyats/pyats-genie-tutorial/ -- >
+-->
+
+どんなものなのかは、下記ページにあるIntroduction to pyATSが秀逸なのでぜひトライしてください。
+最速で理解できます。
+
+<p><a href="https://developer.cisco.com/pyats/" target="_blank">https://developer.cisco.com/pyats/</a></p>
 
 ---
 
 ### 環境づくり
 
-- pyATSの実行環境はWindows上のWSL(Ubuntu)に構築します
+オススメはWindows上のWSL(Ubuntu)にPython環境を構築することです。
 
-- venvを使って個人の環境にインストールします
+pyATSはやっぱりいらないな、となるかもしれませんので、venvを使って適当なディレクトリにインストールするといいでしょう。
 
 ```bash
 $ python3 -m venv .venv
 ```
 
-- direnvを使って自動でactivateします
+direnvをインストールして自動でactivateすると便利です。
 
 ```bash
 echo 'source .venv/bin/activate' > .envrc
@@ -80,9 +89,13 @@ pip install yang.connector
 
 ### 例．コマンドの投げ込み
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex10.execute.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex10.execute.py" target="_blank">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex10.log" target="_blank">log</a>]
+</p>
 
-接続して、コマンドを打ち込む、基本中の基本です。
+
+接続してコマンドを打ち込む、基本中の基本です。
 たったこれだけのコードで動きます。
 
 ```python
@@ -110,30 +123,103 @@ pprint(output)
 
 ### 例．複数装置・複数コマンド
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex13.execute.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex13.execute.py" target="_blank">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex13.log" target="_blank">log</a>]
+</p>
 
-ログ取りです。
+複数台まとめてログ取りできます。
 
-1. 対象装置に接続
+logディレクトリに装置ごとにログファイルを作ります。
 
-2. コマンドを順番に投げ込み
+```python
+#!/usr/bin/env python
 
-3. ファイルに保存
+import sys
+import os
+
+#
+# overwrite standard telnetlib
+#
+def here(path=''):
+  return os.path.abspath(os.path.join(os.path.dirname(__file__), path))
+
+if not here('./lib') in sys.path:
+  sys.path.insert(0, here('./lib'))
+
+import telnetlib
+if telnetlib.MODIFIED_BY:
+    print('modified telnetlib is loaded.')
+
+#
+# pyATS
+#
+
+# import Genie
+from genie.testbed import load
+from unicon.core.errors import TimeoutError, ConnectionError, SubCommandFailure
+
+# show commands
+command_list = [
+    'show version',
+    'show cdp neighbors',
+    'show ip ospf neighbor',
+    'show ip route'
+]
+
+# log directory
+log_dir = os.path.join(here('.'), 'log')
+
+testbed = load('lab.yml')
+
+uut = testbed.devices['uut']
+
+for name, dev in testbed.devices.items():
+    # テストベッド内のすべてのCSR1000vを対象に
+    if dev.platform == 'CSR1000v':
+        # ファイルをオープンしてログ取り開始
+        log_path = os.path.join(log_dir, f'ex13_{name}.log')
+        with open(log_path, 'w') as f:
+            # connect
+            try:
+                dev.connect(via='console')
+            except (TimeoutError, ConnectionError, SubCommandFailure) as e:
+                f.write(str(e))
+                continue
+
+            # execute
+            for cmd in command_list:
+                try:
+                    f.write('\n===\n')
+                    f.write(cmd)
+                    f.write('\n===\n')
+                    f.write(dev.execute(cmd))
+                    f.write('\n\n')
+                except SubCommandFailure:
+                    f.write(f'`{cmd}` invalid. Skipping.')
+
+            # disconnect
+            if dev.is_connected():
+                dev.disconnect()
+```
 
 ---
 
 ### 例．コマンドの実行結果をパース
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex20.parse.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex20.parse.py" target="_blank">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex20.log" target="_blank">log</a>]
+</p>
 
-コマンドを実行した結果のテキストを読み取る処理は、コマンドごとにフォーマットが違うので、自分で実装するのは大変です。
-
-pyATSのGenieにはパーサーが豊富に揃っていますので、簡単にPythonの辞書型に変換してくれます。
-
-`uut.execute('show version)` を `uut.parse('show version)` にするだけで、結果が辞書型になります。
+uut.execute('show version) を uut.parse('show version) にするだけで、結果が辞書型になります。
 
 ```python
 #!/usr/bin/env python
+
+#
+# 単体のコマンドをパースする
+#
 
 # import Genie
 from genie.testbed import load
@@ -156,40 +242,109 @@ from pprint import pprint
 pprint(output)
 ```
 
-パーサーの検索はここから
-
-https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers
+サポートしているコマンドパーサーの検索は
+<a href="https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers" target="_blank">こちら</a>
 
 ---
 
 ### 例．機能名で一括学習
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex30.learn.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex30.learn.py" target="_blank">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex30.log" target="_blank">log</a>]
+</p>
 
 単体コマンドをパースするだけでも便利ですが、より抽象的な機能を指定して一括学習させることもできます。
+routeを学習すればルーティングテーブルを、ospfを学習すればOSPFに関するあらゆる情報を取得できます。
 
-`route`を学習すればルーティングテーブルを、`ospf`を学習すればOSPFに関するあらゆる情報を取得できます。
+```python
+#!/usr/bin/env python
 
+#
+# 抽象的な機能名を指定して学習
+#
 
-機能名一覧はここから
+# import Genie
+from genie.testbed import load
 
-https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/models
+testbed = load('lab.yml')
+
+uut = testbed.devices['uut']
+
+# connect
+uut.connect(via='console')
+
+# learn routing table
+routing = uut.learn('routing')
+
+# disconnect
+if uut.is_connected():
+    uut.disconnect()
+
+from pprint import pprint
+pprint(routing.info)
+```
+
+サポートしている機能名一覧は
+<a href="https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/models" target="_blank">こちら</a>
 
 ---
 
 ### 例．パースした結果を検索
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex40.parse_find.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex40.parse_find.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex40.log" target="_blank">log</a>]
+</p>
 
-`show interfaces`をパースすると結果は辞書型になります。
-
-そのなかから欲しい情報を探すのは、なかなか大変です。
-
-pyATSには辞書型を検索する機能もあります。
-
-out_pktsが0になっているインタフェースを見つけるのは、たったこれだけです。
+show interfacesをパースすると結果は辞書型になります。このなかには大量の情報が格納されていますので欲しい情報を探すのはなかなか大変です。pyATSには辞書型を検索する機能もあって、簡単に欲しい情報を取り出せます。
 
 ```python
+#!/usr/bin/env python
+
+#
+# find interfaces where out_pkts is 0.
+#
+
+from pprint import pprint
+
+# import Genie
+from genie.testbed import load
+
+testbed = load('lab.yml')
+
+uut = testbed.devices['uut']
+
+# connect
+uut.connect(via='console')
+
+# parse
+parsed = uut.parse('show interfaces')
+
+# disconnect
+if uut.is_connected():
+    uut.disconnect()
+
+# display parsed data
+for name, data in parsed.items():
+    pprint(data)
+
+# find 力技で見つける
+for name, data in parsed.items():
+    if 'counters' in data:
+       if 'out_pkts' in data['counters']:
+           if parsed[name]['counters']['out_pkts'] == 0 :
+                print(f"{name} is not used.")
+                # uut.configure('int {}\n shutdown'.format(name))
+
+# pyats find
+# https://pubhub.devnetcloud.com/media/pyats/docs/utilities/helper_functions.html
+
+from pyats.utils.objects import R, find
+
+# from
+# {interface_name: {'counters': {'out_pkts': 0
+
 req = R(['(.*)', 'counters', 'out_pkts', 0])
 found = find(parsed, req, filter_=False)
 pprint(found)
@@ -199,9 +354,12 @@ pprint(found)
 
 ### 例．もっと複雑な条件で検索
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex41.learn_find.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex41.learn_find.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex41.log" target="_blank">log</a>]
+</p>
 
-oper_statusがupで、かつ、duplexがfullのインタフェースを探すなら、こうします。
+たとえばshow interfacesの出力の中からoper_statusがupで、かつ、duplexがfullのインタフェースを探すなら、このように検索します。
 
 ```python
 req3 = [
@@ -217,11 +375,14 @@ pprint(intf_up_full)
 
 ### 例．どのスイッチのどのポートがブロック？
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex42.learn_find.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex42.learn_find.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex42.log" target="_blank">log</a>]
+</p>
 
-スパニングツリーでは、どこにブロックポートができているか、人力で探すのは大変です。
+スパニングツリーのブロックポートがどこにあるのか、人力で探すのは大変です。
 
-pyATSならこれだけです。
+pyATSならテストベッド全体に対してstpを学習させて検索するだけです。
 
 ```python
 req = R(['(.*)', 'info', 'pvst', 'default', 'vlans', '(.*)', 'interfaces', '(.*)', 'port_state', 'blocking'])
@@ -232,11 +393,14 @@ found = find(learnt, req, filter_=False)
 
 ### 例．インタフェースがアップするまで待機
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex43.learn_poll.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex43.learn_poll.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex43.log" target="_blank">log</a>]
+</p>
 
 条件を満たすまで、繰り返し学習を続けることもできます。
 
-oper_statusが'up'かどうかを確認する関数を作って、
+oper_statusが'up'かどうかを確認する関数を作って、learn_poll()するだけです。この例では条件を満たすまで5秒間待機を3回繰り返します。
 
 ```python
 def verify_interface_status(obj):
@@ -246,11 +410,7 @@ def verify_interface_status(obj):
             print("verified successfully")
             return
     raise Exception("Could not find any up interface")
-```
 
-learn_poll()するだけです。この例では条件を満たすまで5秒間待機を3回繰り返します。
-
-```python
 intf.learn_poll(verify=verify_interface_status, sleep=5, attempt=3)
 ```
 
@@ -258,7 +418,12 @@ intf.learn_poll(verify=verify_interface_status, sleep=5, attempt=3)
 
 ### 例．コピペ感覚でコンフィグを貼り付け
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex50.configure.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex50.configure.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex50.log" target="_blank">log</a>]
+</p>
+
+投入したいコマンドを羅列して、コピペ感覚で装置に投入できます。
 
 ```python
 #!/usr/bin/env python
@@ -295,11 +460,12 @@ pprint(output)
 
 ### 例．Pythonicに設定を投入
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex51.configure.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex51.configure.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex51.log" target="_blank">log</a>]
+</p>
 
-Pythonのオブジェクトに対して値を設定するだけで、ルータの設定ができてしまいます。
-
-たったこれだけでインタフェースGig1のdescriptionが書き換わります。
+Pythonのオブジェクトに対して値を設定するだけで、ルータの設定ができてしまいます。これだけでインタフェースGig1のdescriptionが書き換わります。
 
 ```python
 from genie.conf.base import Interface
@@ -319,29 +485,16 @@ gig1.build_config(apply=True)
 
 ### 例．設定が書き換わったか確認したい
 
-https://github.com/takamitsu-iida/pyats-practice/blob/main/ex60.diff.py
+<p>
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex60.diff.py">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex60.log" target="_blank">log</a>]
+</p>
 
-作業前のコンフィグ、作業後のコンフィグでdiffをとって確認しましょう。
+- 作業前のコンフィグをlearn()
+- 作業後のコンフィグをlearn()
+- diffを出力
 
-```python
-# learn configuration
-pre_conf = uut.learn('config')
-
-# change ospf config, cost 100 -> 10
-uut.configure('''
-interface Gig1
-ip ospf cost 10
-exit
-''')
-
-# learn current config
-post_conf = uut.learn('config')
-
-# generate diff
-config_diff = Diff(pre_conf, post_conf)
-config_diff.findDiff()
-print(config_diff)
-```
+こんな感じの出力が得られます。+が増えた部分、-が消えた部分です。
 
 ```bash
 r1#
@@ -354,54 +507,26 @@ r1#
 
 ---
 
-### 例．疎通確認をOKかNGかわかりやすく！
+### 例．疎通確認結果を判定
 
-テストフレームワークを使うと便利です。
+結果をわかりやすく判定するならテストフレームワークを使うと便利です。
 
+pingした結果がOKなのかNGなのか、わかりやすく表示します。
 
----
+<p>
+<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job01_ping" target="_blank">こちら</a>
+</p>
 
-### 例．インタフェースの状態が正しいかわかりやすく！
-
-
-
-
-
----
-
-### 例．
-
+を参照してください。
 
 ---
 
-### 例．
+### 例．インタフェースの状態を判定
 
+テストベッド内の全装置に乗り込み、インタフェースの状態を学習。duplexがfullであればOKとして判定します。
 
----
+<p>
+<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job03_duplex" target="_blank">こちら</a>
+</p>
 
-### 例．
-
-
----
-
-### 例．
-
-
----
-
-### 例．
-
-
----
-
-### 例．
-
-
----
-
-### 例．
-
-
----
-
-### 例．
+を参照してください。
