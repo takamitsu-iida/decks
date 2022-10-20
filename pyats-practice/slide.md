@@ -90,6 +90,7 @@ pip install yang.connector
 ### 例．コマンドの投げ込み
 
 <p>
+ex10　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex10.execute.py" target="_blank">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex10.log" target="_blank">log</a>]
 </p>
@@ -124,6 +125,7 @@ pprint(output)
 ### 例．複数装置・複数コマンド
 
 <p>
+ex13　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex13.execute.py" target="_blank">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex13.log" target="_blank">log</a>]
 </p>
@@ -208,6 +210,7 @@ for name, dev in testbed.devices.items():
 ### 例．コマンドの実行結果をパース
 
 <p>
+ex20　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex20.parse.py" target="_blank">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex20.log" target="_blank">log</a>]
 </p>
@@ -250,12 +253,13 @@ pprint(output)
 ### 例．機能名で一括学習
 
 <p>
+ex30　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex30.learn.py" target="_blank">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex30.log" target="_blank">log</a>]
 </p>
 
 単体コマンドをパースするだけでも便利ですが、より抽象的な機能を指定して一括学習させることもできます。
-routeを学習すればルーティングテーブルを、ospfを学習すればOSPFに関するあらゆる情報を取得できます。
+routingを学習すればルーティングテーブルを、ospfを学習すればOSPFに関するあらゆる情報を取得できます。
 
 ```python
 #!/usr/bin/env python
@@ -293,6 +297,7 @@ pprint(routing.info)
 ### 例．パースした結果を検索
 
 <p>
+ex40　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex40.parse_find.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex40.log" target="_blank">log</a>]
 </p>
@@ -355,6 +360,7 @@ pprint(found)
 ### 例．もっと複雑な条件で検索
 
 <p>
+ex41　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex41.learn_find.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex41.log" target="_blank">log</a>]
 </p>
@@ -376,6 +382,7 @@ pprint(intf_up_full)
 ### 例．どのスイッチのどのポートがブロック？
 
 <p>
+ex42　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex42.learn_find.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex42.log" target="_blank">log</a>]
 </p>
@@ -394,6 +401,7 @@ found = find(learnt, req, filter_=False)
 ### 例．インタフェースがアップするまで待機
 
 <p>
+ex43　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex43.learn_poll.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex43.log" target="_blank">log</a>]
 </p>
@@ -419,6 +427,7 @@ intf.learn_poll(verify=verify_interface_status, sleep=5, attempt=3)
 ### 例．コピペ感覚でコンフィグを貼り付け
 
 <p>
+ex50　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex50.configure.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex50.log" target="_blank">log</a>]
 </p>
@@ -461,6 +470,7 @@ pprint(output)
 ### 例．Pythonicに設定を投入
 
 <p>
+ex51　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex51.configure.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex51.log" target="_blank">log</a>]
 </p>
@@ -486,6 +496,7 @@ gig1.build_config(apply=True)
 ### 例．設定が書き換わったか確認したい
 
 <p>
+ex60　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex60.diff.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex60.log" target="_blank">log</a>]
 </p>
@@ -510,6 +521,7 @@ r1#
 ### 例．OSPFの状態の変化を確認したい
 
 <p>
+ex61　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex61.diff.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex61.log" target="_blank">log</a>]
 </p>
@@ -539,6 +551,7 @@ OSPFの場合、こんな感じで差分を検出できます。
 ### 例．ルーティングテーブルを変化を確認したい
 
 <p>
+ex62　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex62.diff.py">source</a>]　
 [<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex62.log" target="_blank">log</a>]
 </p>
