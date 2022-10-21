@@ -250,6 +250,67 @@ pprint(output)
 
 ---
 
+### 例．コマンドをパースしてCSVで保存
+
+<p>
+ex21　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/ex21.parse_save.py" target="_blank">source</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/output/ex21.log" target="_blank">log</a>]　
+[<a href="https://github.com/takamitsu-iida/pyats-practice/blob/main/templates/show_interfaces.csv.js" target="_blank">jinja2</a>]
+</p>
+
+uut.parse('show interfaces')で辞書型が得られます。
+
+jinja2を使えばCSVに変換するのも簡単です。
+
+```python
+#
+# pyATS
+#
+
+testbed = load('lab.yml')
+
+uut = testbed.devices['uut']
+
+# connect
+uut.connect(via='console')
+
+# parse "show interfaces"
+parsed = uut.parse('show interfaces')
+
+# disconnect
+if uut.is_connected():
+    uut.disconnect()
+
+# 辞書型を画面表示して内容を確認
+pprint(parsed)
+
+#
+# CSVに加工して保存
+#
+
+# jinja2の環境設定
+env = Environment(loader=FileSystemLoader(templates_dir))
+
+# CSVテンプレートを取得
+csv_template = env.get_template('show_interfaces.csv.j2')
+
+# レンダリング
+rendered = csv_template.render(parsed=parsed)
+
+# 保存するファイル名
+rendered_path = os.path.join(log_dir, f'ex21_{uut.hostname}_show_interfaces.csv')
+
+# 保存
+with open(rendered_path, 'w') as f:
+    f.write(rendered)
+    f.close()
+```
+
+<img src="https://takamitsu-iida.github.io/pyats-practice/img/ex21.PNG" height=60%/>
+
+---
+
 ### 例．機能名で一括学習
 
 <p>
