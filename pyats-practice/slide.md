@@ -768,6 +768,18 @@ pingした結果がOKなのかNGなのか、わかりやすく表示します。
 
 ---
 
+### 例．OSPFのネイバー状態を判定
+
+show ip ospf neghborをパースして、期待通りになっているかを判定します。
+
+<p>
+<a href="https://github.com/takamitsu-iida/pyats-practice/tree/main/job05_ospf" target="_blank">こちら</a>
+</p>
+
+を参照してください。
+
+---
+
 # さいごに
 
 <br>
