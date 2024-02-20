@@ -23,3 +23,10 @@ https://takamitsu-iida.github.io/decks/
 pyatsの実行例を紹介。
 
 <https://takamitsu-iida.github.io/decks/pyats-practice/>
+
+
+## 20240220-fnets-python-contest
+
+2024年2月20日（火）Pythonコンテストの振り返り会でのメモ。
+
+<https://takamitsu-iida.github.io/decks/20240220-fnets-python-contest/>
